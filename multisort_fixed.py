@@ -85,7 +85,33 @@ def stooge_sort(items, start, end):
 		stooge_sort(items,start+t,end)
 		stooge_sort(items,start,end-t)
 
+def merge_sort_map(numbers, sorted_numbers, root_len):
+    start_pos = random.randint(0,len(numbers)-root_len-1)
+    merge_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
+
+def gnome_sort_map(numbers, sorted_numbers, root_len):
+    start_pos = random.randint(0,len(numbers)-root_len-1)
+    gnome_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
+
+def stooge_sort_map(numbers, sorted_numbers, root_len):
+    start_pos = random.randint(0,len(numbers)-root_len-1)
+    stooge_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
+
 def main():
+
+    algorithms = [
+        lambda numbers, sorted_numbers, root_len: bubble_sort(numbers),
+        lambda numbers, sorted_numbers, root_len: selection_sort(numbers, sorted_numbers, random.randint(0,len(numbers)-1)),
+        lambda numbers, sorted_numbers, root_len: insertion_sort(numbers, root_len),
+        lambda numbers, sorted_numbers, root_len: bucket_sort(numbers, random.randint(2,3*root_len//4)),
+        lambda numbers, sorted_numbers, root_len: quick_sort(numbers, random.randint(0,len(numbers)-1)),
+        lambda numbers, sorted_numbers, root_len: merge_sort_map(numbers, sorted_numbers, root_len),
+        lambda numbers, sorted_numbers, root_len: gnome_sort_map(numbers, sorted_numbers, root_len),
+        lambda numbers, sorted_numbers, root_len: patience_sort(numbers),
+        lambda numbers, sorted_numbers, root_len: odd_even_sort(numbers, random.randint(0,1)),
+        lambda numbers, sorted_numbers, root_len: stooge_sort_map(numbers, sorted_numbers, root_len)
+    ]
+
     if len(sys.argv) < 3:
         print('Error! Please use "', str(sys.argv[0]),' [filename] [seed] [full_output]" to run the multisort program')
         print('[filename] - The name of the file from where the values will be read (space delimited).')
@@ -115,29 +141,9 @@ def main():
         # Loop over the data
         while (numbers != sorted_numbers):
             sorter = random.randint(0,NUM_OF_SORTERS-1)
-            if sorter == 0:
-                bubble_sort(numbers)
-            elif sorter == 1:
-                selection_sort(numbers, sorted_numbers, random.randint(0,len(numbers)-1))
-            elif sorter == 2:
-                insertion_sort(numbers, root_len)
-            elif sorter == 3:
-                bucket_sort(numbers, random.randint(2,3*root_len//4))
-            elif sorter == 4:
-                quick_sort(numbers, random.randint(0,len(numbers)-1))
-            elif sorter == 5:
-                start_pos = random.randint(0,len(numbers)-root_len-1)
-                merge_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
-            elif sorter == 6:
-                start_pos = random.randint(0,len(numbers)-root_len-1)
-                gnome_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
-            elif sorter == 7:
-                patience_sort(numbers)
-            elif sorter == 8:
-                odd_even_sort(numbers, random.randint(0,1))
-            elif sorter == 9:
-                start_pos = random.randint(0,len(numbers)-root_len-1)
-                stooge_sort(numbers, start_pos, random.randint(start_pos+root_len//3, start_pos+root_len-1))
+            
+            algorithms[sorter](numbers, sorted_numbers, root_len)
+
             if debug:
                 print('Iteration',_iter)
                 print('List:', numbers)
